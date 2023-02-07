@@ -3,31 +3,34 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-[RequireComponent(typeof(NavMeshAgent))]
-public class SelectableUnit : MonoBehaviour
+namespace JH
 {
-    private NavMeshAgent Agent;
-    [SerializeField]
-    private SpriteRenderer SelectionSprite;
-
-    private void Awake()
+    [RequireComponent(typeof(NavMeshAgent))]
+    public class SelectableUnit : MonoBehaviour
     {
-        SelectManager.Instance.AvailableUnit.Add(this);
-        Agent = GetComponent<NavMeshAgent>();
-    }
+        private NavMeshAgent Agent;
+        [SerializeField]
+        private SpriteRenderer SelectionSprite;
 
-    public void MoveTo(Vector3 Position)
-    {
-        Agent.SetDestination(Position);
-    }
+        private void Awake()
+        {
+            SelectManager.Instance.AvailableUnit.Add(this);
+            Agent = GetComponent<NavMeshAgent>();
+        }
 
-    public void OnSelected()
-    {
-        SelectionSprite.gameObject.SetActive(true);
-    }
+        public void MoveTo(Vector3 Position)
+        {
+            Agent.SetDestination(Position);
+        }
 
-    public void OnDeselected()
-    {
-        SelectionSprite.gameObject.SetActive(false);
+        public void OnSelected()
+        {
+            SelectionSprite.gameObject.SetActive(true);
+        }
+
+        public void OnDeselected()
+        {
+            SelectionSprite.gameObject.SetActive(false);
+        }
     }
 }
