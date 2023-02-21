@@ -21,7 +21,24 @@ namespace Ingyu
 
 		private Transform[] floorTiles;
 
+		[HideInInspector]
+		public bool startingCreate = false;
+
+
+		#region Unity Methods
+
+		private void Start()
+		{
+			if (startingCreate == true)
+			{
+				CreateGrid();
+			}
+		}
+
+		#endregion
+
 		#region Grid
+
 		public class GridObject
 		{
 			private GridXZ<GridObject> grid;
@@ -41,6 +58,7 @@ namespace Ingyu
 		/// </summary>
 		public void CreateGrid()
 		{
+			//그리드가 null이 아니면 반환
 			if (grid != null)
 			{
 				Debug.Log("grid is not Null");
@@ -56,6 +74,7 @@ namespace Ingyu
 		/// </summary>
 		public void ExtendGrid()
 		{
+			//그리드가 null이면 반환
 			if (grid == null)
 			{
 				Debug.Log("grid is Empty");
@@ -75,6 +94,7 @@ namespace Ingyu
 		/// </summary>
 		public void DeleteGrid()
 		{
+			//그리드가 null이면 반환
 			if (grid == null)
 				return;
 
