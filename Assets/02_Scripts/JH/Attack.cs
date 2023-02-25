@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.AI;
 
 namespace JH
 {
@@ -11,6 +13,7 @@ namespace JH
         [SerializeField] LayerMask layermask = 0;
         [SerializeField] float speenSpeed = 0f;
         [SerializeField] float fireRate = 0f;
+        private NavMeshAgent agent;
         float currentFireRate;
 
         Transform target = null;
@@ -39,6 +42,7 @@ namespace JH
 
         void Start()
         {
+            agent = GetComponent<NavMeshAgent>();
             currentFireRate = fireRate;
             InvokeRepeating("SearchEnemy", 0f, 0.5f);
         }
@@ -48,6 +52,7 @@ namespace JH
         {
             if (target != null)
             {
+                agent.Stop();
                 Quaternion lookRotarion = Quaternion.LookRotation(target.position);
                 Vector3 euler = Quaternion.RotateTowards(UnitBody.rotation, lookRotarion, speenSpeed * Time.deltaTime).eulerAngles;
                 UnitBody.rotation = Quaternion.Euler(0, euler.y, 0);
