@@ -11,19 +11,22 @@ namespace Ingyu
 	public class GridManager : MonoBehaviour
 	{
 		private GridXZ<GridObject> grid;
-		
-		public Transform floorTile;
+		public GridXZ<GridObject> Grid => grid;
 
+		[Header("Grid Setting")]
 		public int width;
 		public int height;
 		public float cellSize;
 		public Vector3 gridOriginPosition;
-
+		
+		[Header("Floor Setting")]
+		public Transform floorTile;
+		public Transform floorTilesParent;
 		private Transform[] floorTiles;
 
+		[Header("Flag")]
 		[HideInInspector]
 		public bool startingCreate = false;
-
 
 		#region Unity Methods
 
@@ -38,18 +41,36 @@ namespace Ingyu
 		#endregion
 
 		#region Grid
-
+		/// <summary>
+		/// 그리드를 이루는 오브젝트
+		/// </summary>
 		public class GridObject
 		{
 			private GridXZ<GridObject> grid;
-			private int x;
-			private int z;
+			public int x;
+			public int z;
+			private Transform transform; //이 그리드 위에 지어진 건물
 			
 			public GridObject(GridXZ<GridObject> grid, int x, int z)
 			{
 				this.grid = grid;
 				this.x = x;
 				this.z = z;
+			}
+
+			public void SetTransform(Transform transform)
+			{
+				this.transform = transform;
+			}
+
+			public void ClearTransform()
+			{
+				transform = null;
+			}
+
+			public bool CanBuild()
+			{
+				return transform == null;
 			}
 		}
 
@@ -103,7 +124,7 @@ namespace Ingyu
 		}
 		#endregion
 
-		#region FloorTile
+		#region FloorTile Controll
 		private void CreateFloorTile(int width, int height, int interval) //바닥 타일을 생성하는 함수
 		{
 			floorTiles = new Transform[(width / interval) * (height / interval)];
@@ -113,7 +134,7 @@ namespace Ingyu
 			{
 				for (int z = 0; z < (height / interval); z++)
 				{
-					floorTiles[count] = Instantiate(floorTile, grid.GetWorldPosition(x * interval, z * interval), Quaternion.identity);
+					floorTiles[count] = Instantiate(floorTile, grid.GetWorldPosition(x * interval, z * interval), Quaternion.identity, floorTilesParent);
 					floorTiles[count].transform.localScale = Vector3.one * cellSize;
 					count++;
 				}

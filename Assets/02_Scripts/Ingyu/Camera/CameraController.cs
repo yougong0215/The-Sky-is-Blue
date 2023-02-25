@@ -14,17 +14,18 @@ namespace Ingyu
 		private Camera mainCam;
 
 		[Header("Movement")]
-		[SerializeField] private bool moveLock = false;
+		[SerializeField] private bool moveLock;
         [SerializeField] private float movementSpeed;
+		[Range(0.01f, 1f)]
         [SerializeField] private float movementTime;
-		[Tooltip("Viewport 좌표값")]
-		[SerializeField] private float moveValue = 0.4f;
-		private float screenWidth;
-		private float screenHeight;
+		[Range(0, 0.5f)]
+		[SerializeField] private float camMoveAreaValue;
 
 		[Header("Zoom")]
 		[Tooltip("카메라의 각도에 따라 자동으로 지정")]
 		[SerializeField] private Vector3 zoomAmount;
+		[Range(0.01f, 1f)]
+		[SerializeField] private float zoomTime;
 		[SerializeField] private int currentZoomValue;
 		[SerializeField] private int minZoomValue;
 		[SerializeField] private int maxZoomValue;
@@ -36,8 +37,7 @@ namespace Ingyu
 		private void Start()
 		{
 			mainCam = Camera.main;
-			screenWidth = Screen.width;
-			screenHeight = Screen.height;
+			moveLock = true;
 
 			//카메라의 목표 위치 & 줌 값을 현재 카메라의 위치 & 줌 값으로 초기화
 			targetPosition = transform.position;
@@ -58,8 +58,8 @@ namespace Ingyu
 			Movement();
 
 			//목표값으로 이동
-			transform.position = Vector3.Lerp(transform.position, targetPosition, Time.deltaTime * movementTime);
-			cameraTransform.localPosition = Vector3.Lerp(cameraTransform.localPosition, targetZoomPosition, Time.deltaTime * movementTime);
+			transform.position = Vector3.Lerp(transform.position, targetPosition, movementTime);
+			cameraTransform.localPosition = Vector3.Lerp(cameraTransform.localPosition, targetZoomPosition, zoomTime);
 		}
 		
 		//줌인 & 줌아웃
@@ -96,22 +96,19 @@ namespace Ingyu
 			mousePos = mousePos - Vector3.one * 0.5f;
 			mousePos.z = 0;
 
-			//대각선 이동값
-			float diagonal = 0.3f;
-
-			if (mousePos.y >= moveValue || (Mathf.Abs(mousePos.x) > moveValue && mousePos.y >= diagonal))
+			if (mousePos.y >= camMoveAreaValue)
 			{
 				targetPosition += (transform.forward * movementAmount);
 			}
-			if (mousePos.y <= -moveValue || (Mathf.Abs(mousePos.x) > moveValue && mousePos.y <= -diagonal))
+			if (mousePos.y <= -camMoveAreaValue)
 			{
 				targetPosition += (transform.forward * -movementAmount);
 			}
-			if (mousePos.x >= moveValue || (Mathf.Abs(mousePos.y) > moveValue && mousePos.x >= diagonal))
+			if (mousePos.x >= camMoveAreaValue)
 			{
 				targetPosition += (transform.right * movementAmount);
 			}
-			if (mousePos.x <= -moveValue || (Mathf.Abs(mousePos.y) > moveValue && mousePos.x <= -diagonal))
+			if (mousePos.x <= -camMoveAreaValue)
 			{
 				targetPosition += (transform.right * -movementAmount);
 			}

@@ -12,8 +12,9 @@ namespace Ingyu
         private int height;
         public int Height => height;
         private float cellSize;
-        private Transform parentTrans;
         private Vector3 originPosition;
+        public Vector3 OriginPosition => originPosition;
+
         private T[,] gridArray;
 
         public GridXZ(int width, int height, float cellSize, Vector3 originPosition, Func<GridXZ<T>, int, int, T> gridFunc)
@@ -34,18 +35,18 @@ namespace Ingyu
 		    }
         }
 
-		public Vector3 GetWorldPosition(int x, int z)
+		public Vector3 GetWorldPosition(int x, int z) //그리드 좌표를 기반으로 월드 좌표를 반환하는 함수
         {
             return new Vector3(x, 0, z) * cellSize + originPosition;
         }
 
-        public void GetXZ(Vector3 worldPosition, out int x, out int z)
+        public void GetXZ(Vector3 worldPosition, out int x, out int z) //벡터 값을 기반으로 그리드 좌표를 반환하는 함수
         {
             x = Mathf.FloorToInt((worldPosition - originPosition).x / cellSize);
             z = Mathf.FloorToInt((worldPosition - originPosition).z / cellSize);
         }
 
-        public T GridArrayObject(int x, int z)
+        public T GetGridArrayObject(int x, int z) //그리드 오브젝트를 반환하는 함수
 		{
 			try
 			{

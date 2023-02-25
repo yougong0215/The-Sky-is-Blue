@@ -20,7 +20,7 @@ namespace Ingyu
 
 			GUILayout.Label("그리드 컨트롤러");
 
-			startingCreate = GUILayout.Toggle(startingCreate, "시작시 생성");
+			startingCreate = GUILayout.Toggle(startingCreate, "시작시 그리드 생성");
 			tar.startingCreate = startingCreate;
 
 			GUILayout.BeginHorizontal();
