@@ -22,12 +22,14 @@ namespace JH
         private float MouseDownTime;
         private Vector2 StartMousePosition;
 
+        [Obsolete]
         private void Update()
         {
             HandleSelectionInputs();
             HandleMovementInputs();
         }
 
+        [Obsolete]
         private void HandleMovementInputs()
         {
             if (Input.GetKeyUp(KeyCode.Mouse1) && SelectManager.Instance.SelectedUnits.Count > 0)
