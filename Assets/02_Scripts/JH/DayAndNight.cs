@@ -10,11 +10,6 @@ namespace JH
 
         private bool isNight = false;
 
-        void Start()
-        {
-
-        }
-
         void Update()
         {
             transform.Rotate(Vector3.right, 0.1f * secondPerRealTimeSecond * Time.deltaTime);
