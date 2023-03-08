@@ -40,10 +40,12 @@ namespace Ingyu
             return new Vector3(x, 0, z) * cellSize + originPosition;
         }
 
-        public void GetXZ(Vector3 worldPosition, out int x, out int z) //벡터 값을 기반으로 그리드 좌표를 반환하는 함수
+        public bool GetXZ(Vector3 worldPosition, out int x, out int z) //벡터 값을 기반으로 그리드 좌표를 반환하는 함수
         {
             x = Mathf.FloorToInt((worldPosition - originPosition).x / cellSize);
             z = Mathf.FloorToInt((worldPosition - originPosition).z / cellSize);
+
+            return gridArray.GetLength(0) > x && gridArray.GetLength(1) > z;
         }
 
         public T GetGridArrayObject(int x, int z) //그리드 오브젝트를 반환하는 함수

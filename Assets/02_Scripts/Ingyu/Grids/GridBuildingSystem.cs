@@ -4,13 +4,23 @@ using UnityEngine;
 
 namespace Ingyu
 {
+	public enum Direction
+	{
+		Down,
+		Up,
+		Right,
+		Left
+	}
+
     public class GridBuildingSystem : MonoBehaviour
     {
         private GridManager gridManager;
 
+		private Direction buildDir = Direction.Down;
+
 		[Header("Setting")]
 		[SerializeField]
-		private Transform currentBuild;
+		private BuildingSO currentBuild;
 
 		private void Awake()
 		{
@@ -21,12 +31,32 @@ namespace Ingyu
 		{
 			if (Input.GetMouseButtonDown(0))
 			{
-				gridManager.Grid.GetXZ(MousePosition3D.Instance.GetMousePosition(), out int x, out int z);
+				if (!gridManager.Grid.GetXZ(MousePosition3D.Instance.GetMousePosition(), out int x, out int z))
+					return;
 
-				if (gridManager.Grid.GetGridArrayObject(x, z).CanBuild())
+				List<Vector2Int> positionList = currentBuild.GetGridPositionList(new Vector2Int(x, z), Direction.Down);
+
+				bool canBuild = true;
+				foreach (Vector2Int vec in positionList)
 				{
-					Transform tr = Instantiate(currentBuild, new Vector3(x, gridManager.Grid.OriginPosition.y, z), Quaternion.identity);
-					gridManager.Grid.GetGridArrayObject(x, z).SetTransform(tr);
+					if (!gridManager.Grid.GetGridArrayObject(vec.x, vec.y).CanBuild())
+					{
+						canBuild = false;
+						break;
+					}
+				}
+
+				if (canBuild == true)
+				{
+					Transform tr = Instantiate(currentBuild.prefab, new Vector3(x, gridManager.Grid.OriginPosition.y, z), Quaternion.identity);
+					foreach (Vector2Int vec in positionList)
+					{
+						gridManager.Grid.GetGridArrayObject(vec.x, vec.y).SetTransform(tr);
+					}
+				}
+				else
+				{
+					Debug.Log("Can't Build here");
 				}
 
 				print($"{x}, {z}");
